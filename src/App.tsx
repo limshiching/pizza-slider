@@ -18,15 +18,6 @@ export default function App() {
             <div style={styles.label}>{active.label}</div>
             <h1 style={styles.title}>{active.title}</h1>
             <p style={styles.desc}>{active.description}</p>
-
-            <div style={styles.controls}>
-              <button style={styles.button} onClick={prev}>
-                Prev
-              </button>
-              <button style={styles.button} onClick={next}>
-                Next
-              </button>
-            </div>
           </div>
 
           {/* Ingredients (top corners) */}
@@ -86,6 +77,21 @@ export default function App() {
             alt={active.title}
             style={styles.pizza}
           />
+
+          <button
+            style={{ ...styles.navBtn, ...styles.navLeft }}
+            onClick={prev}
+            aria-label="Previous"
+          >
+            ‹
+          </button>
+          <button
+            style={{ ...styles.navBtn, ...styles.navRight }}
+            onClick={next}
+            aria-label="Next"
+          >
+            ›
+          </button>
         </div>
       </div>
     </div>
@@ -107,12 +113,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   heroText: {
     position: "absolute",
-    top: 80,
+    top: 90,
     left: "50%",
     transform: "translateX(-50%)",
     width: "min(760px, 92%)",
     textAlign: "center",
-    zIndex: 3,
+    zIndex: 6,
   },
   label: {
     letterSpacing: 2,
@@ -131,20 +137,6 @@ const styles: Record<string, React.CSSProperties> = {
     opacity: 0.82,
     lineHeight: 1.6,
     fontSize: 16,
-  },
-  controls: {
-    display: "flex",
-    gap: 12,
-    marginTop: 18,
-    justifyContent: "center",
-  },
-  button: {
-    border: "1px solid rgba(255,255,255,0.18)",
-    background: "rgba(255,255,255,0.06)",
-    color: "#fff",
-    padding: "10px 14px",
-    borderRadius: 12,
-    cursor: "pointer",
   },
   stage: {
     position: "relative",
@@ -166,21 +158,22 @@ const styles: Record<string, React.CSSProperties> = {
   pizza: {
     position: "absolute",
     left: "50%",
-    bottom: -320,
-    width: 800,
+    bottom: -430,
+    width: 820,
     transform: "translateX(-50%)",
     pointerEvents: "none",
+    zIndex: 2,
   },
 
   arcWrap: {
     position: "absolute",
     left: "50%",
-    bottom: -60,
+    bottom: -150,
     transform: "translateX(-50%)",
     width: 1000,
     height: 600,
     pointerEvents: "none",
-    zIndex: 4,
+    zIndex: 3,
   },
   arcSvg: {
     display: "block",
@@ -207,6 +200,25 @@ const styles: Record<string, React.CSSProperties> = {
     fill: "#ffffff",
     filter: "drop-shadow(0 0 6px rgba(255,255,255,0.6))",
   },
+  navBtn: {
+    position: "absolute",
+    top: "62%",
+    transform: "translateY(-50%)",
+    width: 56,
+    height: 56,
+    borderRadius: 999,
+    border: "1px solid rgba(255,255,255,0.22)",
+    background: "rgba(0,0,0,0.35)",
+    color: "#fff",
+    cursor: "pointer",
+    zIndex: 7,
+    fontSize: 34,
+    lineHeight: "56px",
+    textAlign: "center",
+    backdropFilter: "blur(6px)",
+  },
+  navLeft: { left: 28 },
+  navRight: { right: 28 },
 };
 
 function arcPath(cx: number, cy: number, r: number): string {

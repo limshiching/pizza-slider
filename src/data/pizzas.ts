@@ -74,7 +74,7 @@ export const PIZZAS: Pizza[] = [
   },
   {
     key: "hawaiian",
-    label: "HAWAIIAN PINEAPPLE PIZZA",
+    label: "HAWAIIAN",
     title: "Hawaiian Pineapple Pizza",
     description:
       "Sweet pineapple paired with savoury ham and melted cheese over a rich tomato base, creating a perfect balance of sweet and savoury flavours.",
