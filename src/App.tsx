@@ -43,6 +43,43 @@ export default function App() {
             style={{ ...styles.ingredients, ...styles.ingredientsRight }}
           />
 
+          {/* Arc indicator */}
+          <div style={styles.arcWrap} aria-hidden="true">
+            <svg
+              width="1000"
+              height="520"
+              viewBox="0 0 1000 520"
+              style={styles.arcSvg}
+            >
+              <path d={arcPath(500, 520, 460)} style={styles.ringOuter} />
+              <path d={arcPath(500, 520, 410)} style={styles.ringInner} />
+
+              <defs>
+                <path id="pizzaArcTextPath" d={arcPath(500, 520, 485)} />
+              </defs>
+
+              <text style={styles.arcText}>
+                <textPath
+                  href="#pizzaArcTextPath"
+                  startOffset="50%"
+                  textAnchor="middle"
+                  method="align"
+                  spacing="auto"
+                >
+                  {[...PIZZAS].map((p) => p.label).join(" • ")}
+                </textPath>
+              </text>
+
+              {/* Moving indicator dot on outer ring */}
+              <circle
+                r="10"
+                cx={dotPos(activeIndex, PIZZAS.length, 500, 520, 460).x}
+                cy={dotPos(activeIndex, PIZZAS.length, 500, 520, 460).y}
+                style={styles.arcDot}
+              />
+            </svg>
+          </div>
+
           {/* Pizza */}
           <img
             src={active.pizzaImage}
@@ -129,9 +166,69 @@ const styles: Record<string, React.CSSProperties> = {
   pizza: {
     position: "absolute",
     left: "50%",
-    bottom: -400,
+    bottom: -320,
     width: 800,
     transform: "translateX(-50%)",
     pointerEvents: "none",
   },
+
+  arcWrap: {
+    position: "absolute",
+    left: "50%",
+    bottom: -60,
+    transform: "translateX(-50%)",
+    width: 1000,
+    height: 600,
+    pointerEvents: "none",
+    zIndex: 4,
+  },
+  arcSvg: {
+    display: "block",
+  },
+  ringOuter: {
+    fill: "none",
+    stroke: "rgba(255, 255, 255, 0.6)",
+    strokeWidth: 1,
+  },
+
+  ringInner: {
+    fill: "none",
+    stroke: "rgba(255, 255, 255, 0.6)",
+    strokeWidth: 1,
+  },
+  arcText: {
+    fontSize: 12,
+    letterSpacing: "4px",
+    textTransform: "uppercase",
+    fill: "rgba(255,255,255,0.90)",
+    dominantBaseline: "middle",
+  },
+  arcDot: {
+    fill: "#ffffff",
+    filter: "drop-shadow(0 0 6px rgba(255,255,255,0.6))",
+  },
 };
+
+function arcPath(cx: number, cy: number, r: number): string {
+  const startX = cx - r;
+  const startY = cy;
+  const endX = cx + r;
+  const endY = cy;
+  return `M ${startX} ${startY} A ${r} ${r} 0 0 1 ${endX} ${endY}`;
+}
+
+function dotPos(
+  activeIndex: number,
+  total: number,
+  cx: number,
+  cy: number,
+  r: number
+): { x: number; y: number } {
+  const t = total <= 1 ? 0 : activeIndex / (total - 1);
+  const angle = Math.PI - Math.PI * t;
+
+  return {
+    x: cx + r * Math.cos(angle),
+    y: cy - r * Math.sin(angle),
+  };
+}
