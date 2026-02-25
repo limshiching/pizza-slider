@@ -1,10 +1,10 @@
-import pepperoniPizza from "../assets/images/pizzas/pepperoni.png";
-import spinachPizza from "../assets/images/pizzas/spinach.png";
-import paneerTikkaPizza from "../assets/images/pizzas/paneer-tikka.png";
-import margheritaPizza from "../assets/images/pizzas/margherita.png";
-import veggiePizza from "../assets/images/pizzas/veggie.png";
-import bbqChickenPizza from "../assets/images/pizzas/bbq-chicken.png";
-import hawaiianPizza from "../assets/images/pizzas/hawaiian.png";
+import pepperoniPizza from "../assets/images/pizza/pepperoni.png";
+import spinachPizza from "../assets/images/pizza/spinach.png";
+import paneerTikkaPizza from "../assets/images/pizza/paneer-tikka.png";
+import margheritaPizza from "../assets/images/pizza/margherita.png";
+import veggiePizza from "../assets/images/pizza/veggie.png";
+import bbqChickenPizza from "../assets/images/pizza/bbq-chicken.png";
+import hawaiianPizza from "../assets/images/pizza/hawaiian.png";
 
 import pepperoniIng from "../assets/images/ingredients/pepperoni.png";
 import spinachIng from "../assets/images/ingredients/spinach.png";
