@@ -71,6 +71,7 @@ export const PIZZAS: Pizza[] = [
       "Tender BBQ chicken with caramelised onions and melted cheese on a crisp crust, balanced with a smoky and savoury finish",
     pizzaImage: bbqChickenPizza,
     ingredientsImage: bbqChickenIng,
+    ingRotate: { left: -70, right: 350 },
   },
   {
     key: "hawaiian",

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -9,9 +9,13 @@ import {
 
 import { PIZZAS } from "./data/pizzas";
 import type { Pizza } from "./types/pizza.types";
+
+import { ARC, arcPath, dotPos } from "./utils/arc";
+import { wrapIndex, getDirection } from "./utils/helper";
+
 import "./App.css";
 
-const BG_BY_KEY: Record<string, string> = {
+const BG_BY_KEY: Record<Pizza["key"], string> = {
   pepperoni: "radial-gradient(circle at center, #140b0f 0%, #070708 72%)",
   spinach: "radial-gradient(circle at center, #0b1410 0%, #070708 72%)",
   "paneer-tikka": "radial-gradient(circle at center, #14100b 0%, #070708 72%)",
@@ -19,23 +23,26 @@ const BG_BY_KEY: Record<string, string> = {
   veggie: "radial-gradient(circle at center, #0f1713 0%, #070708 72%)",
   "bbq-chicken": "radial-gradient(circle at center, #14100b 0%, #070708 72%)",
   hawaiian: "radial-gradient(circle at center, #1b160a 0%, #070708 72%)",
-};
+} as const;
+
+const DEFAULT_BG = BG_BY_KEY.margherita;
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
 
-  const active: Pizza = useMemo(() => PIZZAS[activeIndex], [activeIndex]);
+  const prevIndexRef = useRef(activeIndex);
+  const prevIndex = prevIndexRef.current;
 
-  const next = () => {
-    setDirection(1);
-    setActiveIndex((i) => (i + 1) % PIZZAS.length);
-  };
+  useEffect(() => {
+    prevIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
-  const prev = () => {
-    setDirection(-1);
-    setActiveIndex((i) => (i - 1 + PIZZAS.length) % PIZZAS.length);
-  };
+  const direction = getDirection(prevIndex, activeIndex, PIZZAS.length);
+
+  const active = useMemo(() => PIZZAS[activeIndex], [activeIndex]);
+
+  const next = () => setActiveIndex((i) => wrapIndex(i + 1, PIZZAS.length));
+  const prev = () => setActiveIndex((i) => wrapIndex(i - 1, PIZZAS.length));
 
   const progress = useMotionValue(activeIndex);
   const springProgress = useSpring(progress, { stiffness: 140, damping: 18 });
@@ -44,18 +51,13 @@ export default function App() {
     progress.set(activeIndex);
   }, [activeIndex, progress]);
 
-  const ARC_CX = 500;
-  const ARC_CY = 520;
-  const OUTER_R = 460;
-  const INNER_R = 410;
-
-  const dotCx = useTransform(
+  const dotX = useTransform(
     springProgress,
-    (i) => dotPos(i, PIZZAS.length, ARC_CX, ARC_CY, OUTER_R).x
+    (i) => dotPos(i, PIZZAS.length, ARC.cx, ARC.cy, ARC.outerR).x
   );
-  const dotCy = useTransform(
+  const dotY = useTransform(
     springProgress,
-    (i) => dotPos(i, PIZZAS.length, ARC_CX, ARC_CY, OUTER_R).y
+    (i) => dotPos(i, PIZZAS.length, ARC.cx, ARC.cy, ARC.outerR).y
   );
 
   const pizzaScale = active.pizzaScale ?? 1;
@@ -63,26 +65,24 @@ export default function App() {
 
   const ingScale = active.ingScale ?? 1;
   const ingY = active.ingY ?? 0;
-  const ingLeftX = 0;
-  const ingRightX = 0;
 
-  const isBBQ = active.key === "bbq-chicken";
-  const ingLeftRotate = isBBQ ? -70 : -20;
-  const ingRightRotate = isBBQ ? 350 : 20;
+  const ingLeftRotate = active.ingRotate?.left ?? -20;
+  const ingRightRotate = active.ingRotate?.right ?? 20;
+
+  const bg = BG_BY_KEY[active.key] ?? DEFAULT_BG;
 
   return (
     <div className="page">
       <div className="stage">
-        {/* background */}
+        {/* Background */}
         <motion.div
           className="bg"
           aria-hidden="true"
-          animate={{
-            background: BG_BY_KEY[active.key] ?? BG_BY_KEY.margherita,
-          }}
+          animate={{ background: bg }}
           transition={{ duration: 1, ease: "easeInOut" }}
         />
 
+        {/* Hero text */}
         <div className="heroText">
           <AnimatePresence mode="wait" initial={false}>
             <motion.h1
@@ -112,64 +112,62 @@ export default function App() {
         </div>
 
         {/* Ingredients */}
-        <>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.img
-              key={active.ingredientsImage + "-L"}
-              src={active.ingredientsImage}
-              alt=""
-              aria-hidden="true"
-              className="ingredients left"
-              style={{
-                x: ingLeftX,
-                y: ingY,
-                rotate: ingLeftRotate,
-                scale: ingScale,
-                opacity: 0.55,
-              }}
-              initial={{ opacity: 0, y: direction === 1 ? -30 : 30 }}
-              animate={{ opacity: 0.55, y: ingY }}
-              exit={{ opacity: 0, y: direction === 1 ? 30 : -30 }}
-              transition={{ duration: 0.55, ease: "easeOut" }}
-            />
-          </AnimatePresence>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.img
+            key={`${active.ingredientsImage}-L`}
+            src={active.ingredientsImage}
+            alt=""
+            aria-hidden="true"
+            className="ingredients left"
+            style={{
+              x: 0,
+              y: ingY,
+              rotate: ingLeftRotate,
+              scale: ingScale,
+              opacity: 0.55,
+            }}
+            initial={{ opacity: 0, y: direction === 1 ? -30 : 30 }}
+            animate={{ opacity: 0.55, y: ingY }}
+            exit={{ opacity: 0, y: direction === 1 ? 30 : -30 }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
+          />
+        </AnimatePresence>
 
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.img
-              key={active.ingredientsImage + "-R"}
-              src={active.ingredientsImage}
-              alt=""
-              aria-hidden="true"
-              className="ingredients right"
-              style={{
-                x: ingRightX,
-                y: ingY,
-                rotate: ingRightRotate,
-                scale: ingScale,
-                opacity: 0.55,
-              }}
-              initial={{ opacity: 0, y: direction === 1 ? -30 : 30 }}
-              animate={{ opacity: 0.55, y: 0 }}
-              exit={{ opacity: 0, y: direction === 1 ? 30 : -30 }}
-              transition={{ duration: 0.55, ease: "easeOut", delay: 0.05 }}
-            />
-          </AnimatePresence>
-        </>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.img
+            key={`${active.ingredientsImage}-R`}
+            src={active.ingredientsImage}
+            alt=""
+            aria-hidden="true"
+            className="ingredients right"
+            style={{
+              x: 0,
+              y: ingY,
+              rotate: ingRightRotate,
+              scale: ingScale,
+              opacity: 0.55,
+            }}
+            initial={{ opacity: 0, y: direction === 1 ? -30 : 30 }}
+            animate={{ opacity: 0.55, y: ingY }}
+            exit={{ opacity: 0, y: direction === 1 ? 30 : -30 }}
+            transition={{ duration: 0.55, ease: "easeOut", delay: 0.05 }}
+          />
+        </AnimatePresence>
 
-        {/* Arc  */}
+        {/* Arc */}
         <div className="arcWrap" aria-hidden="true">
           <div className="arcContainer">
             <svg
               className="arcSvg"
-              width="1000"
-              height="520"
-              viewBox="0 0 1000 520"
+              width={ARC.svgW}
+              height={ARC.svgH}
+              viewBox={`0 0 ${ARC.svgW} ${ARC.svgH}`}
             >
-              <path d={arcPath(ARC_CX, ARC_CY, OUTER_R)} className="ring" />
-              <path d={arcPath(ARC_CX, ARC_CY, INNER_R)} className="ring" />
+              <path d={arcPath(ARC.cx, ARC.cy, ARC.outerR)} className="ring" />
+              <path d={arcPath(ARC.cx, ARC.cy, ARC.innerR)} className="ring" />
 
               <defs>
-                <path id="arcTextPath" d={arcPath(ARC_CX, ARC_CY, 485)} />
+                <path id="arcTextPath" d={arcPath(ARC.cx, ARC.cy, ARC.textR)} />
               </defs>
 
               <text className="arcText">
@@ -178,11 +176,11 @@ export default function App() {
                   startOffset="50%"
                   textAnchor="middle"
                 >
-                  {PIZZAS.map((p) => p.label.toUpperCase()).join(" • ")}
+                  {ARC_LABELS}
                 </textPath>
               </text>
 
-              <motion.g style={{ x: dotCx, y: dotCy }}>
+              <motion.g style={{ x: dotX, y: dotY }}>
                 <circle r="10" className="dot" />
               </motion.g>
             </svg>
@@ -194,10 +192,7 @@ export default function App() {
                 src={active.pizzaImage}
                 alt={active.title}
                 className="pizza"
-                style={{
-                  x: "-50%",
-                  y: "-50%",
-                }}
+                style={{ x: "-50%", y: "-50%" }}
                 initial={{
                   opacity: 0,
                   rotate: pizzaRotateBase + (direction === 1 ? -10 : 10),
@@ -220,48 +215,25 @@ export default function App() {
           </div>
         </div>
 
+        {/* Nav */}
         <button className="navBtn leftBtn" onClick={prev} aria-label="Previous">
           ‹
         </button>
         <button className="navBtn rightBtn" onClick={next} aria-label="Next">
           ›
         </button>
+
+        <div className="mobileDots" aria-hidden="true">
+          {PIZZAS.map((_, i) => (
+            <span
+              key={i}
+              className={`dot-indicator ${i === activeIndex ? "active" : ""}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-function clamp(n: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, n));
-}
-
-function arcPath(cx: number, cy: number, r: number): string {
-  const startX = cx - r;
-  const startY = cy;
-  const endX = cx + r;
-  const endY = cy;
-  return `M ${startX} ${startY} A ${r} ${r} 0 0 1 ${endX} ${endY}`;
-}
-
-function dotPos(
-  index: number,
-  total: number,
-  cx: number,
-  cy: number,
-  r: number
-): { x: number; y: number } {
-  if (total <= 1) return { x: cx, y: cy - r };
-
-  const i = clamp(index, 0, total - 1);
-  const t = total === 1 ? 0 : i / (total - 1);
-
-  const start = (200 * Math.PI) / 180;
-  const end = (340 * Math.PI) / 180;
-
-  const angle = start + (end - start) * t;
-
-  return {
-    x: cx + r * Math.cos(angle),
-    y: cy + r * Math.sin(angle),
-  };
-}
+const ARC_LABELS = PIZZAS.map((p) => p.label.toUpperCase()).join(" • ");
