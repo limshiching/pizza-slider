@@ -108,7 +108,7 @@ body {
 .arcWrap {
   position: absolute;
   left: 50%;
-  top: clamp(520px, 72vh, 820px);
+  top: clamp(420px, 60vh, 700px);
   transform: translate(-50%, -50%);
   width: var(--arcWidth);
   height: clamp(560px, 65vh, 820px);
@@ -118,7 +118,7 @@ body {
 .arcContainer {
   position: absolute;
   left: 50%;
-  top: 74%;
+  top: 70%;
   transform: translate(-50%, -50%);
   width: var(--arcWidth);
   height: 720px;
@@ -170,6 +170,7 @@ body {
 .navBtn {
   position: absolute;
   top: 80%;
+  top: 76%;
   transform: translateY(-50%);
   width: 50px;
   height: 50px;
@@ -196,18 +197,6 @@ body {
 .rightBtn {
   right: 22px;
 }
-
-/* @media (max-width: 640px) {
-  .heroText {
-    top: 70px;
-  }
-  .desc {
-    font-size: 15px;
-  }
-  .ingredients {
-    opacity: 0.42;
-  }
-} */
 
 @media (min-height: 900px) and (min-width: 1400px) {
   .arcWrap {
