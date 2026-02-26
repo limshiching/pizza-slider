@@ -1,14 +1,29 @@
 import { useMemo, useState } from "react";
 import { PIZZAS } from "./data/pizzas";
 
+import { AnimatePresence, motion } from "framer-motion";
+
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
 
   const active = useMemo(() => PIZZAS[activeIndex], [activeIndex]);
 
-  const next = () => setActiveIndex((i) => (i + 1) % PIZZAS.length);
-  const prev = () =>
-    setActiveIndex((i) => (i - 1 + PIZZAS.length) % PIZZAS.length);
+  const next = () => {
+    setDirection(1);
+    setActiveIndex((i) => {
+      const nextIndex = (i + 1) % PIZZAS.length;
+      return nextIndex;
+    });
+  };
+
+  const prev = () => {
+    setDirection(-1);
+    setActiveIndex((i) => {
+      const prevIndex = (i - 1 + PIZZAS.length) % PIZZAS.length;
+      return prevIndex;
+    });
+  };
 
   return (
     <div style={styles.page}>
@@ -21,18 +36,36 @@ export default function App() {
           </div>
 
           {/* Ingredients (top corners) */}
-          <img
-            src={active.ingredientsImage}
-            alt=""
-            aria-hidden="true"
-            style={{ ...styles.ingredients, ...styles.ingredientsLeft }}
-          />
-          <img
-            src={active.ingredientsImage}
-            alt=""
-            aria-hidden="true"
-            style={{ ...styles.ingredients, ...styles.ingredientsRight }}
-          />
+
+          <>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.img
+                key={active.ingredientsImage + "-L"}
+                src={active.ingredientsImage}
+                alt=""
+                aria-hidden="true"
+                style={{ ...styles.ingredients, ...styles.ingredientsLeft }}
+                initial={{ y: direction === 1 ? -30 : 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 0.85 }}
+                exit={{ y: direction === 1 ? 30 : -30, opacity: 0 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+              />
+            </AnimatePresence>
+
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.img
+                key={active.ingredientsImage + "-R"}
+                src={active.ingredientsImage}
+                alt=""
+                aria-hidden="true"
+                style={{ ...styles.ingredients, ...styles.ingredientsRight }}
+                initial={{ y: direction === 1 ? -30 : 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 0.85 }}
+                exit={{ y: direction === 1 ? 30 : -30, opacity: 0 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+              />
+            </AnimatePresence>
+          </>
 
           {/* Arc indicator */}
           <div style={styles.arcWrap} aria-hidden="true">
@@ -72,11 +105,26 @@ export default function App() {
           </div>
 
           {/* Pizza */}
-          <img
-            src={active.pizzaImage}
-            alt={active.title}
-            style={styles.pizza}
-          />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.img
+              key={active.pizzaImage}
+              src={active.pizzaImage}
+              alt={active.title}
+              style={styles.pizza}
+              initial={{
+                rotate: direction === 1 ? -12 : 12,
+                opacity: 0,
+                scale: 0.98,
+              }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{
+                rotate: direction === 1 ? 12 : -12,
+                opacity: 0,
+                scale: 0.98,
+              }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
+            />
+          </AnimatePresence>
 
           <button
             style={{ ...styles.navBtn, ...styles.navLeft }}
@@ -164,7 +212,6 @@ const styles: Record<string, React.CSSProperties> = {
     pointerEvents: "none",
     zIndex: 2,
   },
-
   arcWrap: {
     position: "absolute",
     left: "50%",
