@@ -63,9 +63,6 @@ export function PizzaArc({
             const p = dotPos(i, n, ARC.cx, ARC.cy, ARC.textR);
 
             const centerAngle = Math.atan2(p.y - ARC.cy, p.x - ARC.cx);
-
-            // Choose how wide each clickable segment should be.
-            // If labels overlap, make this a bit smaller.
             const halfAngle = ((Math.PI * 2) / n) * 0.45;
 
             return (

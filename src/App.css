@@ -202,7 +202,10 @@ body {
 }
 
 @media (max-height: 768px) {
+  .arcSvg {
+    display: none;
+  }
   .navBtn {
-    top: 50%;
+    top: 60%;
   }
 }
