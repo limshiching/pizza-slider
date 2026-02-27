@@ -12,6 +12,7 @@ import type { Pizza } from "./types/pizza.types";
 
 import { ARC, arcPath, dotPos } from "./utils/arc";
 import { wrapIndex, getDirection } from "./utils/helper";
+import PizzaCursor from "./components/PizzaCursor";
 
 import "./App.css";
 
@@ -73,6 +74,7 @@ export default function App() {
 
   return (
     <div className="page">
+      <PizzaCursor />
       <div className="stage">
         {/* Background */}
         <motion.div
