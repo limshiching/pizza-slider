@@ -13,7 +13,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  cursor: none !important;
 }
 
 html,
@@ -26,7 +25,6 @@ body {
   background: var(--bg);
   color: #fff;
   font-family: var(--font-sans);
-  cursor: none !important;
 }
 
 /* ─── Layout ─────────────────────────────────────────────────── */
@@ -180,6 +178,7 @@ body {
   text-align: center;
   z-index: 7;
   transition: transform 150ms ease, background 150ms ease;
+  cursor: pointer;
 }
 
 .navBtn:hover {
