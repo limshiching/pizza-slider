@@ -1,7 +1,6 @@
 :root {
   --bg: #070708;
   --arc-width: clamp(500px, 96vw, 1050px);
-  /* --arc-width: min(1050px, 96vw); */
   --pizza-size: clamp(460px, 52vw, 780px);
   --ing-size: clamp(360px, 38vw, 660px);
 
@@ -115,7 +114,6 @@ body {
   left: 50%;
   top: 70%;
   transform: translate(-50%, -50%);
-  /* width: var(--arc-width); */
   width: clamp(600px, 96vw, 1050px);
   height: clamp(600px, 90vh, 720px);
   z-index: 4;
@@ -193,6 +191,14 @@ body {
 }
 .rightBtn {
   right: 22px;
+}
+
+/* ─── Breakpoints ────────────────────────────────────────────── */
+
+@media (min-height: 900px) and (min-width: 1400px) {
+  .arcWrap {
+    top: 70vh;
+  }
 }
 
 @media (max-height: 768px) {
