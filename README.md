@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+# 🍕 Pizza Slider
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An animated pizza showcase built with **React**, **TypeScript**, and **Framer Motion**.
 
-Currently, two official plugins are available:
+This project explores radial navigation, motion-driven UI systems, and SVG arc-based interaction. The focus was on engineering a smooth, scalable animation architecture rather than building a static layout.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The Pizza Slider is an interactive component that allows users to browse different pizzas through an arc-based navigation system.
 
-## Expanding the ESLint configuration
+Key goals of this project:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Experiment with motion-driven UI
+- Build custom geometry-based interaction logic
+- Create smooth directional transitions
+- Ensure responsiveness across screen sizes
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠 Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- React
+- TypeScript
+- Framer Motion
+- SVG (`textPath`, arc geometry)
+- CSS (responsive layout + fluid scaling)
+
+---
+
+## 🚀 Features
+
+- Radial arc navigation with clickable segments
+- Spring-animated indicator dot
+- Direction-aware animations
+- Dynamic background transitions
+- SVG textPath label system
+- Responsive scaling from mobile to large displays (2K+)
+
+---
+
+## 🧠 Implementation Highlights
+
+- Custom arc geometry built using polar coordinate calculations
+- Motion values synced with SVG positioning
+- Interactive hit zones aligned to curved text labels
+- Directional animation logic based on navigation flow
+- Fluid sizing using modern CSS techniques
+
+---
+
+## 📸 Live Demo
+
+[View Live Site](https://limshiching.github.io/pizza-slider/)
+
+---
+
+## 📦 Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/limshiching/pizza-slider.git
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🎨 Inspiration & Credits
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Design inspired by the pizza slider concept created by [@divyashrma18](https://github.com/divyashrma18/pizza-slider).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+All visual assets (pizza and ingredient images) are sourced from the original creator’s project.  
+All interaction logic, animation systems, layout structure, and implementation were independently developed in this project.
