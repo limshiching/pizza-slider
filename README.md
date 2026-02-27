@@ -70,3 +70,10 @@ Design inspired by the pizza slider concept created by [@divyashrma18](https://g
 
 All visual assets (pizza and ingredient images) are sourced from the original creator’s project.  
 All interaction logic, animation systems, layout structure, and implementation were independently developed in this project.
+
+## 🚧 Future Improvements
+
+- Add scroll-wheel and swipe navigation to improve interaction discoverability
+- Refine responsive layout for mobile devices
+- Reduce transition timing for faster perceived responsiveness
+- Improve spatial balance and layout density

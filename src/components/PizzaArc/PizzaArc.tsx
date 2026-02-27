@@ -115,7 +115,7 @@ export function PizzaArc({
               rotate: pizzaRotateBase + (direction === 1 ? 10 : -10),
               scale: pizzaScale * 0.98,
             }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             draggable={false}
           />
         </AnimatePresence>

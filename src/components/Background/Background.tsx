@@ -20,7 +20,7 @@ export default function Background({ activeKey }: { activeKey: string }) {
       className="bg"
       aria-hidden="true"
       animate={{ background: bg }}
-      transition={{ duration: 1, ease: "easeInOut" }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
     />
   );
 }

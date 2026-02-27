@@ -33,7 +33,7 @@ export default function Ingredients({
           initial={{ opacity: 0, y: direction === 1 ? -30 : 30 }}
           animate={{ opacity: 0.55, y: ingY }}
           exit={{ opacity: 0, y: direction === 1 ? 30 : -30 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         />
       </AnimatePresence>
 
